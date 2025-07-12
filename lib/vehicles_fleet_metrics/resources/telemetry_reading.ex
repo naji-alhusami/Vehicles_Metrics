@@ -14,6 +14,7 @@ defmodule VehiclesFleetMetrics.TelemetryReading do
 
     mutations do
       create :create_telemetry_reading, :create
+      action(:generate_fake_readings, :generate_fake_readings)
     end
   end
 
@@ -70,27 +71,52 @@ defmodule VehiclesFleetMetrics.TelemetryReading do
     # Events like "low_fuel" or "harsh_brake"
     attribute :event, :string do
       allow_nil?(true)
+      public?(true)
     end
 
     # GPS latitude
     attribute :lat, :float do
       allow_nil?(false)
+      public?(true)
     end
 
     # GPS longitude
     attribute :lng, :float do
       allow_nil?(false)
+      public?(true)
     end
 
     # Time this telemetry was recorded
     attribute :recorded_at, :utc_datetime do
       allow_nil?(false)
+      public?(true)
     end
   end
 
-  # Define allowed actions on this data
+  # Define allowed actions  
   actions do
-    defaults([:create, :read])
+    defaults([ :read])
+
+    create :create do
+      accept([
+        :vehicle_id,
+        :odometer,
+        :fuel_level,
+        :speed,
+        :acceleration,
+        :temperature,
+        :status,
+        :event,
+        :lat,
+        :lng,
+        :recorded_at
+      ])
+    end
+
+    action :generate_fake_readings, {:array, :struct} do
+      constraints(items: [instance_of: __MODULE__])
+      run(VehiclesFleetMetrics.Generators.TelemetryReadingGenerator)
+    end
   end
 
   relationships do

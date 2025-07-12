@@ -16,8 +16,33 @@ type CreateTelemetryReadingResult {
   errors: [MutationError!]!
 }
 
+input CreateTelemetryReadingInput {
+  vehicleId: ID!
+  odometer: Float!
+  fuelLevel: Float!
+  speed: Float
+  acceleration: Float
+  temperature: Float
+  status: String
+  event: String
+  lat: Float!
+  lng: Float!
+  recordedAt: DateTime!
+}
+
 enum TelemetryReadingSortField {
   ID
+  VEHICLE_ID
+  ODOMETER
+  FUEL_LEVEL
+  SPEED
+  ACCELERATION
+  TEMPERATURE
+  STATUS
+  EVENT
+  LAT
+  LNG
+  RECORDED_AT
 }
 
 "A keyset page of :telemetry_reading"
@@ -33,6 +58,131 @@ type KeysetPageOfTelemetryReading {
 
   "The last keyset in the results"
   endKeyset: String
+}
+
+input TelemetryReadingFilterRecordedAt {
+  isNil: Boolean
+  eq: DateTime
+  notEq: DateTime
+  in: [DateTime!]
+  lessThan: DateTime
+  greaterThan: DateTime
+  lessThanOrEqual: DateTime
+  greaterThanOrEqual: DateTime
+}
+
+input TelemetryReadingFilterLng {
+  isNil: Boolean
+  eq: Float
+  notEq: Float
+  in: [Float!]
+  lessThan: Float
+  greaterThan: Float
+  lessThanOrEqual: Float
+  greaterThanOrEqual: Float
+}
+
+input TelemetryReadingFilterLat {
+  isNil: Boolean
+  eq: Float
+  notEq: Float
+  in: [Float!]
+  lessThan: Float
+  greaterThan: Float
+  lessThanOrEqual: Float
+  greaterThanOrEqual: Float
+}
+
+input TelemetryReadingFilterEvent {
+  isNil: Boolean
+  eq: String
+  notEq: String
+  in: [String]
+  lessThan: String
+  greaterThan: String
+  lessThanOrEqual: String
+  greaterThanOrEqual: String
+  like: String
+  ilike: String
+}
+
+input TelemetryReadingFilterStatus {
+  isNil: Boolean
+  eq: String
+  notEq: String
+  in: [String]
+  lessThan: String
+  greaterThan: String
+  lessThanOrEqual: String
+  greaterThanOrEqual: String
+  like: String
+  ilike: String
+}
+
+input TelemetryReadingFilterTemperature {
+  isNil: Boolean
+  eq: Float
+  notEq: Float
+  in: [Float]
+  lessThan: Float
+  greaterThan: Float
+  lessThanOrEqual: Float
+  greaterThanOrEqual: Float
+}
+
+input TelemetryReadingFilterAcceleration {
+  isNil: Boolean
+  eq: Float
+  notEq: Float
+  in: [Float]
+  lessThan: Float
+  greaterThan: Float
+  lessThanOrEqual: Float
+  greaterThanOrEqual: Float
+}
+
+input TelemetryReadingFilterSpeed {
+  isNil: Boolean
+  eq: Float
+  notEq: Float
+  in: [Float]
+  lessThan: Float
+  greaterThan: Float
+  lessThanOrEqual: Float
+  greaterThanOrEqual: Float
+}
+
+input TelemetryReadingFilterFuelLevel {
+  isNil: Boolean
+  eq: Float
+  notEq: Float
+  in: [Float!]
+  lessThan: Float
+  greaterThan: Float
+  lessThanOrEqual: Float
+  greaterThanOrEqual: Float
+}
+
+input TelemetryReadingFilterOdometer {
+  isNil: Boolean
+  eq: Float
+  notEq: Float
+  in: [Float!]
+  lessThan: Float
+  greaterThan: Float
+  lessThanOrEqual: Float
+  greaterThanOrEqual: Float
+}
+
+input TelemetryReadingFilterVehicleId {
+  isNil: Boolean
+  eq: ID
+  notEq: ID
+  in: [ID!]
+  lessThan: ID
+  greaterThan: ID
+  lessThanOrEqual: ID
+  greaterThanOrEqual: ID
 }
 
 input TelemetryReadingFilterId {
@@ -51,6 +201,17 @@ input TelemetryReadingFilterInput {
   or: [TelemetryReadingFilterInput!]
   not: [TelemetryReadingFilterInput!]
   id: TelemetryReadingFilterId
+  vehicleId: TelemetryReadingFilterVehicleId
+  odometer: TelemetryReadingFilterOdometer
+  fuelLevel: TelemetryReadingFilterFuelLevel
+  speed: TelemetryReadingFilterSpeed
+  acceleration: TelemetryReadingFilterAcceleration
+  temperature: TelemetryReadingFilterTemperature
+  status: TelemetryReadingFilterStatus
+  event: TelemetryReadingFilterEvent
+  lat: TelemetryReadingFilterLat
+  lng: TelemetryReadingFilterLng
+  recordedAt: TelemetryReadingFilterRecordedAt
 }
 
 input TelemetryReadingSortInput {
@@ -60,6 +221,17 @@ input TelemetryReadingSortInput {
 
 type TelemetryReading {
   id: ID!
+  vehicleId: ID!
+  odometer: Float!
+  fuelLevel: Float!
+  speed: Float
+  acceleration: Float
+  temperature: Float
+  status: String
+  event: String
+  lat: Float!
+  lng: Float!
+  recordedAt: DateTime!
 }
 
 enum VehicleSortField {
@@ -218,7 +390,8 @@ type RootQueryType {
 
 type RootMutationType {
   generateFakeVehicles: [Vehicle!]!
-  createTelemetryReading: CreateTelemetryReadingResult!
+  createTelemetryReading(input: CreateTelemetryReadingInput!): CreateTelemetryReadingResult!
+  generateFakeReadings: [TelemetryReading!]!
   generateRandomNumbers: [RandomGenerator!]!
 }
 
@@ -228,3 +401,11 @@ character sequences. The Json type is most often used to represent a free-form
 human-readable json string.
 """
 scalar Json
+
+"""
+The `DateTime` scalar type represents a date and time in the UTC
+timezone. The DateTime appears in a JSON response as an ISO8601 formatted
+string, including UTC timezone ("Z"). The parsed date and time string will
+be converted to UTC if there is an offset.
+"""
+scalar DateTime
